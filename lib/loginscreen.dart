@@ -91,26 +91,26 @@ class _loginscreenState extends State<loginscreen> {
                             child: Column(
                               children: [
                                 TextFormField(
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Enter Email';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
+                                    // validator: (value) {
+                                    //   if (value!.isEmpty) {
+                                    //     return 'Enter Email';
+                                    //   } else {
+                                    //     return null;
+                                    //   }
+                                    // },
                                     keyboardType: TextInputType.emailAddress,
                                     controller: emailcon,
                                     decoration: InputDecoration(
                                       hintText: "Email",
                                     )),
                                 TextFormField(
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Enter Password';
-                                    } else {
-                                      return null;
-                                    }
-                                  },
+                                  // validator: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return 'Enter Password';
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
                                   keyboardType: TextInputType.emailAddress,
                                   controller: passwordcon,
                                   decoration: InputDecoration(

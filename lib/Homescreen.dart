@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_one/Toast.dart';
+
 import 'Component.dart';
 import 'package:flutter/material.dart';
 
@@ -21,8 +24,12 @@ class _homescreenState extends State<homescreen> {
           actions: [
             IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => loginscreen()));
+                FirebaseAuth.instance.signOut().then((value) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => loginscreen()));
+                }).onError((error, stackTrace) {
+                  toastmessage(error.toString());
+                });
               },
               icon: Icon(Icons.logout_outlined),
             )

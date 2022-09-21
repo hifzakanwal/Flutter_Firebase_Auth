@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
+import 'Homescreen.dart';
 import 'loginscreen.dart';
 
 class splashscreen extends StatefulWidget {
@@ -16,10 +18,21 @@ class _splashscreenState extends State<splashscreen> {
     // TODO: implement initState
     super.initState();
 
-    Timer(Duration(seconds: 5), () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => loginscreen()));
-    });
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      Timer(
+        const Duration(seconds: 5),
+        () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => homescreen(name: ''))),
+      );
+    } else {
+      Timer(
+        const Duration(seconds: 5),
+        () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => loginscreen())),
+      );
+    }
   }
 
   @override

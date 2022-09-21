@@ -115,9 +115,6 @@ class _signUpScreenState extends State<signUpScreen> {
                           roundbutton(
                               title: "Sign Up.",
                               tapfun: () {
-                                setState(() {
-                                  loading = true;
-                                });
                                 // if (_formkey.currentState!.validate()) {
                                 print("press signup");
                                 FirebaseAuth.instance
@@ -135,9 +132,7 @@ class _signUpScreenState extends State<signUpScreen> {
                                               homescreen(name: '')));
                                 }).onError((error, stackTrace) {
                                   print("error");
-                                  setState(() {
-                                    loading = false;
-                                  });
+
                                   toastmessage(error.toString());
                                 });
                               }),
