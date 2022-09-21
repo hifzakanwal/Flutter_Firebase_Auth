@@ -1,4 +1,6 @@
 import 'package:country_picker/country_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_one/Toast.dart';
 import 'package:firebase_one/verifycodescreen.dart';
 import 'package:flutter/material.dart';
 import 'Component.dart';
@@ -74,8 +76,22 @@ class _loginwithphonenoState extends State<loginwithphoneno> {
         roundbutton(
             title: "Continue",
             tapfun: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => verifycode()));
+              FirebaseAuth.instance.verifyPhoneNumber(
+                  phoneNumber: phonecon.text.toString(),
+                  verificationCompleted: (_) {},
+                  verificationFailed: (e) {
+                    toastmessage(e.toString());
+                  },
+                  codeSent: (String verificationId, int? token) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                verifycode(verificationId: verificationId)));
+                  },
+                  codeAutoRetrievalTimeout: (e) {
+                    toastmessage(e.toString());
+                  });
             }),
       ]),
     );

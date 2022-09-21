@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
@@ -8,7 +9,8 @@ import 'Component.dart';
 import 'Homescreen.dart';
 
 class verifycode extends StatefulWidget {
-  const verifycode({super.key});
+  final String verificationId;
+  const verifycode({super.key, required this.verificationId});
 
   @override
   State<verifycode> createState() => _verifycodeState();
@@ -61,9 +63,24 @@ class _verifycodeState extends State<verifycode> {
                     color: Colors.white,
                     border: Border.all(color: bcolor, width: 2)),
               ),
-              onChanged: (v) {
-                code = v;
-                print(code);
+              onChanged: (value) async {
+                final tokencredidential = PhoneAuthProvider.credential(
+                    verificationId: widget.verificationId, smsCode: code);
+
+                try {
+                  await FirebaseAuth.instance
+                      .signInWithCredential(tokencredidential);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              homescreen(name: 'Welcome Again')));
+                } catch (e) {
+                  print(e);
+
+                  Navigator.pop(context);
+                }
+                code = value;
               },
             ),
           ),
