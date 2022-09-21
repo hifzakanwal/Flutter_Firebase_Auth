@@ -1,5 +1,8 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'Component.dart';
 
 import 'package:flutter/material.dart';
@@ -8,6 +11,7 @@ import 'Forgetpassword.dart';
 import 'Homescreen.dart';
 import 'Loginwithphoneno.dart';
 import 'SignUpScreen.dart';
+import 'Toast.dart';
 
 class loginscreen extends StatefulWidget {
   const loginscreen({super.key});
@@ -17,14 +21,14 @@ class loginscreen extends StatefulWidget {
 }
 
 class _loginscreenState extends State<loginscreen> {
+  bool loading = false;
+  final emailcon = TextEditingController();
+  final passwordcon = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final emailcon = TextEditingController();
-    final Passwordcon = TextEditingController();
-
     return Scaffold(
-      backgroundColor: Color.fromARGB(15, 187, 187, 187),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           Container(
@@ -108,7 +112,7 @@ class _loginscreenState extends State<loginscreen> {
                                     }
                                   },
                                   keyboardType: TextInputType.emailAddress,
-                                  controller: Passwordcon,
+                                  controller: passwordcon,
                                   decoration: InputDecoration(
                                     hintText: "Password",
                                   ),
@@ -142,11 +146,19 @@ class _loginscreenState extends State<loginscreen> {
                           roundbutton(
                               title: "Login",
                               tapfun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            homescreen(name: '')));
+                                FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: emailcon.text.toString(),
+                                        password: passwordcon.text.toString())
+                                    .then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              homescreen(name: '')));
+                                }).onError((error, stackTrace) {
+                                  toastmessage(error.toString());
+                                });
                               }),
                           SizedBox(
                             height: 10,
@@ -199,8 +211,6 @@ class _loginscreenState extends State<loginscreen> {
                   ),
                   TextButton(
                       onPressed: () {
-                        if (_formkey.currentState!.validate()) {}
-
                         Navigator.push(
                             context,
                             MaterialPageRoute(
