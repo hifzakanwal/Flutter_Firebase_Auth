@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'Component.dart';
+import 'Toast.dart';
 import 'homescreen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,11 +19,12 @@ class signUpScreen extends StatefulWidget {
 class _signUpScreenState extends State<signUpScreen> {
   @override
   Widget build(BuildContext context) {
+    bool loading = false;
     final emailcon = TextEditingController();
-    final Passwordcon = TextEditingController();
-
+    final passwordcon = TextEditingController();
+    final _formkey = GlobalKey<FormState>();
     return Scaffold(
-      backgroundColor: Color.fromARGB(15, 187, 187, 187),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           Container(
@@ -79,14 +83,28 @@ class _signUpScreenState extends State<signUpScreen> {
                             height: 45,
                           ),
                           TextFormField(
+                              // validator: (value) {
+                              //   if (value!.isEmpty) {
+                              //     return 'First Enter Email';
+                              //   } else {
+                              //     return null;
+                              //   }
+                              // },
                               keyboardType: TextInputType.emailAddress,
                               controller: emailcon,
                               decoration: InputDecoration(
                                 hintText: "Email",
                               )),
                           TextFormField(
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'First Enter Password';
+                            //   } else {
+                            //     return null;
+                            //   }
+                            // },
                             keyboardType: TextInputType.emailAddress,
-                            controller: Passwordcon,
+                            controller: passwordcon,
                             decoration: InputDecoration(
                               hintText: "Password",
                             ),
@@ -95,14 +113,33 @@ class _signUpScreenState extends State<signUpScreen> {
                             height: 55,
                           ),
                           roundbutton(
-                              title: "Sign Up",
+                              title: "Sign Up.",
                               tapfun: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          homescreen(name: ''),
-                                    ));
+                                setState(() {
+                                  loading = true;
+                                });
+                                // if (_formkey.currentState!.validate()) {
+                                print("press signup");
+                                FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
+                                        email: emailcon.text.toString(),
+                                        password: passwordcon.text.toString())
+                                    .then((value) {
+                                  print("suc");
+
+                                  print("suc next scren");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              homescreen(name: '')));
+                                }).onError((error, stackTrace) {
+                                  print("error");
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  toastmessage(error.toString());
+                                });
                               }),
                         ],
                       ),

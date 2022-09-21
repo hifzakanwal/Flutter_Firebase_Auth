@@ -24,8 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color(0xff2470c7),
       ),
-      home:
-          splashscreen(), // This trailing comma makes auto-formatting nicer for build methods.
+      home: splashscreen(),
     );
   }
 }
