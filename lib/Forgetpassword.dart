@@ -1,6 +1,8 @@
+import 'package:firebase_one/Toast.dart';
 import 'package:flutter/material.dart';
 import 'Component.dart';
 import 'loginscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class forgetpassword extends StatefulWidget {
   const forgetpassword({super.key});
@@ -10,7 +12,7 @@ class forgetpassword extends StatefulWidget {
 }
 
 class _forgetpasswordState extends State<forgetpassword> {
-  final phonecon = TextEditingController();
+  final emailcon = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +37,7 @@ class _forgetpasswordState extends State<forgetpassword> {
         Padding(
           padding: const EdgeInsets.all(20),
           child: TextFormField(
-            controller: phonecon,
+            controller: emailcon,
             decoration: InputDecoration(
               filled: true,
               focusedBorder:
@@ -50,8 +52,15 @@ class _forgetpasswordState extends State<forgetpassword> {
         roundbutton(
             title: "Send ",
             tapfun: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => loginscreen()));
+              FirebaseAuth.instance
+                  .sendPasswordResetEmail(email: emailcon.text.toString())
+                  .then((value) {
+                toastmessage("We have Sent you email to recover password");
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => loginscreen()));
+              }).onError((error, stackTrace) {
+                toastmessage(error.toString());
+              });
             }),
       ]),
     );
